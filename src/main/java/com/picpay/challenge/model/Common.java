@@ -1,5 +1,6 @@
 package com.picpay.challenge.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Inheritance;
@@ -15,6 +16,7 @@ import jakarta.persistence.InheritanceType;
 @DiscriminatorValue("cliente")
 public class Common extends User {
     @NotBlank
+    @Column(name = "cpf", unique = true)
     private String cpf;
     @NotBlank
     private String fullName;
