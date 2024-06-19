@@ -3,9 +3,9 @@ package com.picpay.challenge.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.picpay.challenge.model.Shopkeeper;
+import com.picpay.challenge.model.ShopkeeperUser;
 
 @Repository
-public interface ShopkeeperRepository extends JpaRepository<Shopkeeper, Long> {
+public interface ShopkeeperRepository extends JpaRepository<ShopkeeperUser, Long> {
     
 }

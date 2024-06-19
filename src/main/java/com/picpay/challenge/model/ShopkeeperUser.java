@@ -14,7 +14,7 @@ import jakarta.persistence.InheritanceType;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorValue("lojista")
-public class Shopkeeper extends User {
+public class ShopkeeperUser extends User {
     @NotBlank
     @Column(name = "cnpj", unique = true)
     private String cnpj;

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.picpay.challenge.model.Shopkeeper;
+import com.picpay.challenge.model.ShopkeeperUser;
 import com.picpay.challenge.service.ShopkeeperService;
 
 @RestController
@@ -22,7 +22,7 @@ public class ShopkeeperController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createShopkeeper(@RequestBody Shopkeeper shopkeeper) {
+    public ResponseEntity<?> createShopkeeper(@RequestBody ShopkeeperUser shopkeeper) {
         return new ResponseEntity<>(shopkeeperService.createShopkeeper(shopkeeper), HttpStatus.CREATED);
     }
 
