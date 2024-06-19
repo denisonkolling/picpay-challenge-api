@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.picpay.challenge.model.Common;
+import com.picpay.challenge.dto.CommonUserRequest;
 import com.picpay.challenge.service.CommonUserService;
 
 @RestController
@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody Common user) {
-        return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
+    public ResponseEntity<?> createUser(@RequestBody CommonUserRequest data) {
+        return new ResponseEntity<>(userService.createUser(data), HttpStatus.CREATED);
     }
 }

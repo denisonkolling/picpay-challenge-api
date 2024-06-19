@@ -14,7 +14,7 @@ import jakarta.persistence.InheritanceType;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorValue("cliente")
-public class Common extends User {
+public class CommonUser extends User {
     @NotBlank
     @Column(name = "cpf", unique = true)
     private String cpf;

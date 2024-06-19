@@ -2,7 +2,7 @@ package com.picpay.challenge.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.picpay.challenge.model.Shopkeeper;
+import com.picpay.challenge.model.ShopkeeperUser;
 import com.picpay.challenge.repository.ShopkeeperRepository;
 import com.picpay.challenge.service.ShopkeeperService;
 
@@ -16,7 +16,7 @@ public class ShopkeeperServiceImpl implements ShopkeeperService {
     }
 
     @Override
-    public Shopkeeper createShopkeeper(Shopkeeper shopkeeper) {
+    public ShopkeeperUser createShopkeeper(ShopkeeperUser shopkeeper) {
         return shopkeeperRepository.save(shopkeeper);
     }
 

@@ -1,9 +1,10 @@
 package com.picpay.challenge.service;
 
-import com.picpay.challenge.model.Common;
+import com.picpay.challenge.dto.CommonUserRequest;
+import com.picpay.challenge.dto.CommonUserResponse;
 
 public interface CommonUserService {
 
-    Common createUser(Common user);
+    CommonUserResponse createUser(CommonUserRequest user);
 
 }
