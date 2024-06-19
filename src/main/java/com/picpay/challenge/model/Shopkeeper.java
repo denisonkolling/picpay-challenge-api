@@ -1,5 +1,6 @@
 package com.picpay.challenge.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Inheritance;
@@ -15,6 +16,7 @@ import jakarta.persistence.InheritanceType;
 @DiscriminatorValue("lojista")
 public class Shopkeeper extends User {
     @NotBlank
+    @Column(name = "cnpj", unique = true)
     private String cnpj;
     @NotBlank
     private String razaoSocial;
