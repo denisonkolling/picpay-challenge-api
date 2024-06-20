@@ -1,7 +1,8 @@
 package com.picpay.challenge.service;
 
-import com.picpay.challenge.model.Transfer;
+import com.picpay.challenge.dto.TransferRequest;
+import com.picpay.challenge.dto.TransferResponse;
 
 public interface TransferService {
-    Transfer createTransfer(Transfer transfer);
+    TransferResponse createTransfer(TransferRequest transfer);
 }

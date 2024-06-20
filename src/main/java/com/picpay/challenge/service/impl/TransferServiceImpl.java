@@ -1,7 +1,10 @@
 package com.picpay.challenge.service.impl;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import com.picpay.challenge.dto.TransferRequest;
+import com.picpay.challenge.dto.TransferResponse;
 import com.picpay.challenge.model.Transfer;
 import com.picpay.challenge.repository.TransferRepository;
 import com.picpay.challenge.service.TransferService;
@@ -16,8 +19,20 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public Transfer createTransfer(Transfer transfer) {
-        return transferRepository.save(transfer);
+    public TransferResponse createTransfer(TransferRequest data) {
+
+        Transfer transfer = new Transfer();
+
+        BeanUtils.copyProperties(data, transfer);
+
+        transferRepository.save(transfer);
+
+        TransferResponse transferResponse = new TransferResponse();
+
+        BeanUtils.copyProperties(transfer, transferResponse);
+
+        return transferResponse;
+
     }
 
 }

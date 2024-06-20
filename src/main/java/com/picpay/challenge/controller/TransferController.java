@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.picpay.challenge.model.Transfer;
+import com.picpay.challenge.dto.TransferRequest;
 import com.picpay.challenge.service.TransferService;
 
 @RestController
@@ -22,7 +22,7 @@ public class TransferController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createTransfer(@RequestBody Transfer transfer) {
+    public ResponseEntity<?> createTransfer(@RequestBody TransferRequest transfer) {
         return new ResponseEntity<>(transferService.createTransfer(transfer), HttpStatus.CREATED);
 
     }
