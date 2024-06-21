@@ -39,9 +39,13 @@ public class TransferServiceImpl implements TransferService {
         BeanUtils.copyProperties(data, transfer);
         transferRepository.save(transfer);
 
-        double newPayerAccountBalance = payer.getAccountBalance() - data.getValue();
-        payer.setAccountBalance(newPayerAccountBalance);
-        userRepository.save(payer);
+        if (payer.getAccountBalance() > data.getValue()) {
+            double newPayerAccountBalance = payer.getAccountBalance() - data.getValue();
+            payer.setAccountBalance(newPayerAccountBalance);
+            userRepository.save(payer);
+        } else {
+            throw new RuntimeException("Payer has no found to transfer the amout:" + data.getValue());
+        }
 
         double newPayeeAccountBalance = data.getValue() + payee.getAccountBalance();
         payee.setAccountBalance(newPayeeAccountBalance);
