@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.picpay.challenge.dto.TransferRequest;
 import com.picpay.challenge.dto.TransferResponse;
 import com.picpay.challenge.model.User;
+import com.picpay.challenge.model.UserType;
 import com.picpay.challenge.model.Transfer;
 import com.picpay.challenge.repository.UserRepository;
 import com.picpay.challenge.repository.TransferRepository;
@@ -23,25 +24,29 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public TransferResponse createTransfer(TransferRequest data) {
+    public TransferResponse createTransfer(TransferRequest transferRequest) {
 
-        User payer = checkUser(data.getPayer(), "Payer");
+        User payer = checkUser(transferRequest.getPayer(), "Payer");
 
-        User payee = checkUser(data.getPayee(), "Payee");
-
-        Transfer transfer = new Transfer();
-        BeanUtils.copyProperties(data, transfer);
-        transferRepository.save(transfer);
-
-        if (payer.getAccountBalance() > data.getValue()) {
-            double newPayerAccountBalance = payer.getAccountBalance() - data.getValue();
-            payer.setAccountBalance(newPayerAccountBalance);
-            userRepository.save(payer);
-        } else {
-            throw new RuntimeException("Payer has no found to transfer the amout: $" + data.getValue());
+        if (payer.getUserType() == UserType.LOJISTA) {
+            throw new RuntimeException("Shopkeeper can NOT make transfer");
         }
 
-        double newPayeeAccountBalance = data.getValue() + payee.getAccountBalance();
+        if (payer.getAccountBalance() < transferRequest.getValue()) {
+            throw new RuntimeException("Payer has no found to transfer the amout: $" + transferRequest.getValue());
+        }
+
+        User payee = checkUser(transferRequest.getPayee(), "Payee");
+
+        Transfer transfer = new Transfer();
+        BeanUtils.copyProperties(transferRequest, transfer);
+        transferRepository.save(transfer);
+
+        double newPayerAccountBalance = payer.getAccountBalance() - transferRequest.getValue();
+        payer.setAccountBalance(newPayerAccountBalance);
+        userRepository.save(payer);
+
+        double newPayeeAccountBalance = transferRequest.getValue() + payee.getAccountBalance();
         payee.setAccountBalance(newPayeeAccountBalance);
         userRepository.save(payee);
 
