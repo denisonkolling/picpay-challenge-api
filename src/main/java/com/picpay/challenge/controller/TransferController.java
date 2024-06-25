@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.picpay.challenge.dto.TransferRequest;
+import com.picpay.challenge.dto.TransferResponse;
 import com.picpay.challenge.service.TransferService;
 
 import jakarta.transaction.Transactional;
@@ -25,8 +26,8 @@ public class TransferController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<?> createTransfer(@RequestBody TransferRequest transfer) {
-        return new ResponseEntity<>(transferService.createTransfer(transfer), HttpStatus.CREATED);
+    public ResponseEntity<TransferResponse> createTransfer(@RequestBody TransferRequest transfer) {
+        return new ResponseEntity<TransferResponse>(transferService.createTransfer(transfer), HttpStatus.CREATED);
 
     }
 

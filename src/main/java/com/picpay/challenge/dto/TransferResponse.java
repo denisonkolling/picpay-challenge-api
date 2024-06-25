@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class TransferResponse {
     @NotNull
-    private Double value;
-    @NotNull
     private Long payee;
+    @NotNull
+    private Double value;
 }

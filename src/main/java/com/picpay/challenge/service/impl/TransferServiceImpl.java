@@ -5,11 +5,9 @@ import org.springframework.stereotype.Service;
 
 import com.picpay.challenge.dto.TransferRequest;
 import com.picpay.challenge.dto.TransferResponse;
-import com.picpay.challenge.model.CommonUser;
-import com.picpay.challenge.model.ShopkeeperUser;
+import com.picpay.challenge.model.User;
 import com.picpay.challenge.model.Transfer;
-import com.picpay.challenge.repository.CommonUserRepository;
-import com.picpay.challenge.repository.ShopkeeperRepository;
+import com.picpay.challenge.repository.UserRepository;
 import com.picpay.challenge.repository.TransferRepository;
 import com.picpay.challenge.service.TransferService;
 
@@ -17,22 +15,20 @@ import com.picpay.challenge.service.TransferService;
 public class TransferServiceImpl implements TransferService {
 
     private final TransferRepository transferRepository;
-    private final CommonUserRepository userRepository;
-    private final ShopkeeperRepository shopkeeperRepository;
+    private final UserRepository userRepository;
 
-    public TransferServiceImpl(TransferRepository transferRepository, CommonUserRepository userRepository,
-            ShopkeeperRepository shopkeeperRepository) {
+    public TransferServiceImpl(TransferRepository transferRepository, UserRepository userRepository) {
         this.transferRepository = transferRepository;
         this.userRepository = userRepository;
-        this.shopkeeperRepository = shopkeeperRepository;
     }
 
     @Override
     public TransferResponse createTransfer(TransferRequest data) {
-        CommonUser payer = userRepository.findById(data.getPayer())
+
+        User payer = userRepository.findById(data.getPayer())
                 .orElseThrow(() -> new RuntimeException("Payer not found with ID: " + data.getPayer()));
 
-        ShopkeeperUser payee = shopkeeperRepository.findById(data.getPayee())
+        User payee = userRepository.findById(data.getPayee())
                 .orElseThrow(() -> new RuntimeException("Payee not found with ID: " + data.getPayee()));
 
         Transfer transfer = new Transfer();
@@ -44,12 +40,12 @@ public class TransferServiceImpl implements TransferService {
             payer.setAccountBalance(newPayerAccountBalance);
             userRepository.save(payer);
         } else {
-            throw new RuntimeException("Payer has no found to transfer the amout:" + data.getValue());
+            throw new RuntimeException("Payer has no found to transfer the amout: $" + data.getValue());
         }
 
         double newPayeeAccountBalance = data.getValue() + payee.getAccountBalance();
         payee.setAccountBalance(newPayeeAccountBalance);
-        shopkeeperRepository.save(payee);
+        userRepository.save(payee);
 
         TransferResponse transferResponse = new TransferResponse();
         BeanUtils.copyProperties(transfer, transferResponse);
