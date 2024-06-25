@@ -7,22 +7,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.picpay.challenge.dto.CommonUserRequest;
-import com.picpay.challenge.service.CommonUserService;
+import com.picpay.challenge.dto.UserRequest;
+import com.picpay.challenge.service.UserService;
 
 @RestController
 @RequestMapping("/user")
 
 public class UserController {
 
-    private final CommonUserService userService;
+    private final UserService userService;
 
-    public UserController(CommonUserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody CommonUserRequest data) {
+    public ResponseEntity<?> createUser(@RequestBody UserRequest data) {
         return new ResponseEntity<>(userService.createUser(data), HttpStatus.CREATED);
     }
 }

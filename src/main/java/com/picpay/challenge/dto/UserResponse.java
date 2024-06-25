@@ -3,8 +3,8 @@ package com.picpay.challenge.dto;
 import lombok.Data;
 
 @Data
-public class CommonUserResponse {
-    private String fullName;
-    private String cpf;
+public class UserResponse {
+    private String name;
+    private String cpfCnpj;
     private String email;
 }

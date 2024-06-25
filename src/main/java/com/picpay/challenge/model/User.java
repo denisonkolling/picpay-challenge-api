@@ -1,33 +1,43 @@
 package com.picpay.challenge.model;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.DiscriminatorType;
 
 @Data
 @Entity
 @Table(name = "usuarios")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class User {
+public class User {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
-    @Column(name = "email", unique = true)
+
+    @Column(name = "nome", nullable = false, length = 255)
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_usuario", nullable = false, length = 20)
+    private UserType userType;
+
+    @Column(name = "cpf_cnpj", nullable = false, length = 20, unique = true)
+    private String cpfCnpj;
+
+    @Column(name = "email", nullable = false, length = 255, unique = true)
     private String email;
-    @NotBlank
+
+    @Column(name = "senha", nullable = false, length = 255)
     private String password;
-    @NotNull
+
+    @Column(name = "razao_social")
+    private String companyName;
+
+    @Column(name = "saldo_conta")
     private Double accountBalance;
 }
