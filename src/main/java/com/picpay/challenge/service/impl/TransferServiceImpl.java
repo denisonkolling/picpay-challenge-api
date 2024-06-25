@@ -25,11 +25,9 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public TransferResponse createTransfer(TransferRequest data) {
 
-        User payer = userRepository.findById(data.getPayer())
-                .orElseThrow(() -> new RuntimeException("Payer not found with ID: " + data.getPayer()));
+        User payer = checkUser(data.getPayer(), "Payer");
 
-        User payee = userRepository.findById(data.getPayee())
-                .orElseThrow(() -> new RuntimeException("Payee not found with ID: " + data.getPayee()));
+        User payee = checkUser(data.getPayee(), "Payee");
 
         Transfer transfer = new Transfer();
         BeanUtils.copyProperties(data, transfer);
@@ -51,6 +49,14 @@ public class TransferServiceImpl implements TransferService {
         BeanUtils.copyProperties(transfer, transferResponse);
 
         return transferResponse;
+    }
+
+    User checkUser(Long userId, String userType) {
+
+        User userDB = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException(userType + " not found with ID: " + userId));
+
+        return userDB;
     }
 
 }
