@@ -3,6 +3,8 @@ package com.picpay.challenge.service.impl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import com.picpay.challenge.client.AuthorizationClient;
+import com.picpay.challenge.dto.AuthorizationResponse;
 import com.picpay.challenge.dto.TransferRequest;
 import com.picpay.challenge.dto.TransferResponse;
 import com.picpay.challenge.model.User;
@@ -17,10 +19,13 @@ public class TransferServiceImpl implements TransferService {
 
     private final TransferRepository transferRepository;
     private final UserRepository userRepository;
+    private final AuthorizationClient authorizationClient;
 
-    public TransferServiceImpl(TransferRepository transferRepository, UserRepository userRepository) {
+    public TransferServiceImpl(TransferRepository transferRepository, UserRepository userRepository,
+            AuthorizationClient authorizationClient) {
         this.transferRepository = transferRepository;
         this.userRepository = userRepository;
+        this.authorizationClient = authorizationClient;
     }
 
     @Override
@@ -53,15 +58,23 @@ public class TransferServiceImpl implements TransferService {
         TransferResponse transferResponse = new TransferResponse();
         BeanUtils.copyProperties(transfer, transferResponse);
 
+        AuthorizationResponse authorization = authorizationClient.getAuthorization();
+
+        checkAuthorization(authorization);
+
         return transferResponse;
     }
 
     User checkUser(Long userId, String userType) {
-
         User userDB = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException(userType + " not found with ID: " + userId));
-
         return userDB;
+    }
+
+    public void checkAuthorization(AuthorizationResponse authorization) {
+        if (!authorization.getData().isAuthorization()) {
+            throw new RuntimeException("Transfer has not been authorized");
+        }
     }
 
 }
