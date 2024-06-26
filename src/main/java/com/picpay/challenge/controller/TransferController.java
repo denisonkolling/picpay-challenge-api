@@ -11,8 +11,6 @@ import com.picpay.challenge.dto.TransferRequest;
 import com.picpay.challenge.dto.TransferResponse;
 import com.picpay.challenge.service.TransferService;
 
-import jakarta.transaction.Transactional;
-
 @RestController
 @RequestMapping("/transfer")
 
@@ -25,7 +23,6 @@ public class TransferController {
     }
 
     @PostMapping
-    @Transactional
     public ResponseEntity<TransferResponse> createTransfer(@RequestBody TransferRequest transfer) {
         return new ResponseEntity<TransferResponse>(transferService.createTransfer(transfer), HttpStatus.CREATED);
 

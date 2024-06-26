@@ -10,28 +10,31 @@ import com.picpay.challenge.dto.TransferResponse;
 import com.picpay.challenge.model.User;
 import com.picpay.challenge.model.UserType;
 import com.picpay.challenge.model.Transfer;
-import com.picpay.challenge.repository.UserRepository;
 import com.picpay.challenge.repository.TransferRepository;
 import com.picpay.challenge.service.TransferService;
+import com.picpay.challenge.service.UserService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class TransferServiceImpl implements TransferService {
 
     private final TransferRepository transferRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final AuthorizationClient authorizationClient;
 
-    public TransferServiceImpl(TransferRepository transferRepository, UserRepository userRepository,
+    public TransferServiceImpl(TransferRepository transferRepository, UserService userService,
             AuthorizationClient authorizationClient) {
         this.transferRepository = transferRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.authorizationClient = authorizationClient;
     }
 
     @Override
+    @Transactional
     public TransferResponse createTransfer(TransferRequest transferRequest) {
 
-        User payer = checkUser(transferRequest.getPayer(), "Payer");
+        User payer = userService.findUserById(transferRequest.getPayer(), "Payer");
 
         if (payer.getUserType() == UserType.LOJISTA) {
             throw new RuntimeException("Shopkeeper can NOT make transfer");
@@ -41,7 +44,7 @@ public class TransferServiceImpl implements TransferService {
             throw new RuntimeException("Payer has no found to transfer the amout: $" + transferRequest.getValue());
         }
 
-        User payee = checkUser(transferRequest.getPayee(), "Payee");
+        User payee = userService.findUserById(transferRequest.getPayee(), "Payee");
 
         Transfer transfer = new Transfer();
         BeanUtils.copyProperties(transferRequest, transfer);
@@ -49,11 +52,11 @@ public class TransferServiceImpl implements TransferService {
 
         double newPayerAccountBalance = payer.getAccountBalance() - transferRequest.getValue();
         payer.setAccountBalance(newPayerAccountBalance);
-        userRepository.save(payer);
+        userService.updateUser(payer);
 
         double newPayeeAccountBalance = transferRequest.getValue() + payee.getAccountBalance();
         payee.setAccountBalance(newPayeeAccountBalance);
-        userRepository.save(payee);
+        userService.updateUser(payee);
 
         TransferResponse transferResponse = new TransferResponse();
         BeanUtils.copyProperties(transfer, transferResponse);
@@ -63,12 +66,6 @@ public class TransferServiceImpl implements TransferService {
         checkAuthorization(authorization);
 
         return transferResponse;
-    }
-
-    User checkUser(Long userId, String userType) {
-        User userDB = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException(userType + " not found with ID: " + userId));
-        return userDB;
     }
 
     public void checkAuthorization(AuthorizationResponse authorization) {
