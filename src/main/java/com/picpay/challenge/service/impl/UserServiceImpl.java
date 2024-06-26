@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
         User user = new User();
         BeanUtils.copyProperties(dataRequest, user);
-        
+
         user.setAccountBalance(0D);
 
         userRepository.save(user);
@@ -32,5 +32,17 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(user, userResponse);
 
         return userResponse;
+    }
+
+    @Override
+    public User findUserById(Long userId, String userType) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException(userType + " not found with ID: " + userId));
+        return user;
+    }
+
+    @Override
+    public void updateUser(User user) {
+        userRepository.save(user);
     }
 }
