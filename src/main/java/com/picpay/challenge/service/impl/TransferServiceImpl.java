@@ -3,14 +3,13 @@ package com.picpay.challenge.service.impl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import com.picpay.challenge.client.AuthorizationClient;
-import com.picpay.challenge.dto.AuthorizationResponse;
 import com.picpay.challenge.dto.TransferRequest;
 import com.picpay.challenge.dto.TransferResponse;
 import com.picpay.challenge.model.User;
 import com.picpay.challenge.model.UserType;
 import com.picpay.challenge.model.Transfer;
 import com.picpay.challenge.repository.TransferRepository;
+import com.picpay.challenge.service.AuthorizationService;
 import com.picpay.challenge.service.TransferService;
 import com.picpay.challenge.service.UserService;
 
@@ -21,13 +20,13 @@ public class TransferServiceImpl implements TransferService {
 
     private final TransferRepository transferRepository;
     private final UserService userService;
-    private final AuthorizationClient authorizationClient;
+    private final AuthorizationService authorizationService;
 
     public TransferServiceImpl(TransferRepository transferRepository, UserService userService,
-            AuthorizationClient authorizationClient) {
+            AuthorizationService authorizationService) {
         this.transferRepository = transferRepository;
         this.userService = userService;
-        this.authorizationClient = authorizationClient;
+        this.authorizationService = authorizationService;
     }
 
     @Override
@@ -61,17 +60,9 @@ public class TransferServiceImpl implements TransferService {
         TransferResponse transferResponse = new TransferResponse();
         BeanUtils.copyProperties(transfer, transferResponse);
 
-        AuthorizationResponse authorization = authorizationClient.getAuthorization();
-
-        checkAuthorization(authorization);
+        authorizationService.getAuthorization();
 
         return transferResponse;
-    }
-
-    public void checkAuthorization(AuthorizationResponse authorization) {
-        if (!authorization.getData().isAuthorization()) {
-            throw new RuntimeException("Transfer has not been authorized");
-        }
     }
 
 }
