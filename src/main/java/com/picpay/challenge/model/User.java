@@ -1,5 +1,7 @@
 package com.picpay.challenge.model;
 
+import java.time.Instant;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,4 +42,16 @@ public class User {
 
     @Column(name = "saldo_conta")
     private Double accountBalance;
+
+    @Column(name = "criado_em")
+    private Instant createdAt;
+
+    @Column(name = "alterado_em")
+    private Instant updatedAt;
+
+    @Column(name = "deletado_em")
+    private Instant deletedAt;
+
+    @Column(name = "deletado")
+    private boolean isDeleted = false;
 }

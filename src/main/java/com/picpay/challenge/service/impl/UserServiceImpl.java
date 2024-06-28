@@ -1,5 +1,9 @@
 package com.picpay.challenge.service.impl;
 
+import java.time.Instant;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +17,7 @@ import com.picpay.challenge.service.UserService;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -25,6 +30,7 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(dataRequest, user);
 
         user.setAccountBalance(0D);
+        user.setCreatedAt(Instant.now());
 
         userRepository.save(user);
 
@@ -43,6 +49,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user) {
+        user.setUpdatedAt(Instant.now());
         userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        user.setDeleted(true);
+        user.setDeletedAt(Instant.now());
+
+        userRepository.save(user);
+
+        logger.info("User with ID: {} has been logically deleted at {}", userId, user.getDeletedAt());
     }
 }
