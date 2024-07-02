@@ -48,9 +48,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUser(UserRequest user, Long userId) {
+
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        if (existingUser != null) {
+            copyNonNullProperties(user, existingUser);
+            existingUser.setUpdatedAt(Instant.now());
+            userRepository.save(existingUser);
+
+            logger.info("User with ID: {} has been updated at {}", existingUser.getId(), existingUser.getUpdatedAt());
+        }
+
+    }
+
+    private void copyNonNullProperties(UserRequest source, User target) {
+        if (source.getName() != null) {
+            target.setName(source.getName());
+        }
+        if (source.getEmail() != null) {
+            target.setEmail(source.getEmail());
+        }
+        if (source.getPassword() != null) {
+            target.setPassword(source.getPassword());
+        }
+        if (source.getCompanyName() != null) {
+            target.setCompanyName(source.getCompanyName());
+        }
+
+    }
+
+    @Override
+    public void updateUserAccountBalance(User user) {
         user.setUpdatedAt(Instant.now());
         userRepository.save(user);
+
+        logger.info("User with ID: {} account balance has been updated at {}", user.getId(), user.getDeletedAt());
     }
 
     @Override

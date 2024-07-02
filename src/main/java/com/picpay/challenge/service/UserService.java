@@ -10,7 +10,9 @@ public interface UserService {
 
     User findUserById(Long userId, String userType);
 
-    void updateUser(User user);
+    void updateUser(UserRequest user, Long id);
+
+    void updateUserAccountBalance(User user);
 
     void deleteUser(Long userId);
 
