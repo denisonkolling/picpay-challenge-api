@@ -51,11 +51,11 @@ public class TransferServiceImpl implements TransferService {
 
         double newPayerAccountBalance = payer.getAccountBalance() - transferRequest.getValue();
         payer.setAccountBalance(newPayerAccountBalance);
-        userService.updateUser(payer);
+        userService.updateUserAccountBalance(payer);
 
         double newPayeeAccountBalance = transferRequest.getValue() + payee.getAccountBalance();
         payee.setAccountBalance(newPayeeAccountBalance);
-        userService.updateUser(payee);
+        userService.updateUserAccountBalance(payee);
 
         TransferResponse transferResponse = new TransferResponse();
         BeanUtils.copyProperties(transfer, transferResponse);
