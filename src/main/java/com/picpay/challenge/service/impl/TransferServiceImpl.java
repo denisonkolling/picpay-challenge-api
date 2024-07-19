@@ -33,7 +33,7 @@ public class TransferServiceImpl implements TransferService {
     @Transactional
     public TransferResponse createTransfer(TransferRequest transferRequest) {
 
-        User payer = userService.findUserById(transferRequest.getPayer(), "Payer");
+        User payer = userService.findUserByIdAndType(transferRequest.getPayer(), "Payer");
 
         if (payer.getUserType() == UserType.LOJISTA) {
             throw new RuntimeException("Shopkeeper can NOT make transfer");
@@ -43,7 +43,7 @@ public class TransferServiceImpl implements TransferService {
             throw new RuntimeException("Payer has no found to transfer the amout: $" + transferRequest.getValue());
         }
 
-        User payee = userService.findUserById(transferRequest.getPayee(), "Payee");
+        User payee = userService.findUserByIdAndType(transferRequest.getPayee(), "Payee");
 
         Transfer transfer = new Transfer();
         BeanUtils.copyProperties(transferRequest, transfer);

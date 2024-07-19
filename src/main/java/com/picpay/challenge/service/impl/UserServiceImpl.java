@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserById(Long userId, String userType) {
+    public User findUserByIdAndType(Long userId, String userType) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException(userType + " not found with ID: " + userId));
         return user;
@@ -98,5 +98,17 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         logger.info("User with ID: {} has been logically deleted at {}", userId, user.getDeletedAt());
+    }
+
+    @Override
+    public UserResponse findUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        UserResponse userResponse = new UserResponse();
+
+        BeanUtils.copyProperties(user, userResponse);
+
+        return userResponse;
     }
 }
