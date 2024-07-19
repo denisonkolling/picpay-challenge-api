@@ -3,6 +3,7 @@ package com.picpay.challenge.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,5 +40,10 @@ public class UserController {
     public ResponseEntity<Void> updateUser(@PathVariable("id") Long userId, @RequestBody UserRequest data) {
         userService.updateUser(data, userId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findUserById(@PathVariable("id") Long userId) {
+        return new ResponseEntity<>(userService.findUserById(userId), HttpStatus.OK);
     }
 }

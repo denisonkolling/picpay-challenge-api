@@ -8,7 +8,9 @@ public interface UserService {
 
     UserResponse createUser(UserRequest user);
 
-    User findUserById(Long userId, String userType);
+    User findUserByIdAndType(Long userId, String userType);
+
+    UserResponse findUserById(Long userId);
 
     void updateUser(UserRequest user, Long id);
 
